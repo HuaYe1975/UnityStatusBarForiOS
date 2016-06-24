@@ -9,6 +9,8 @@ public static class StatusBarManager {
 	static extern void _ShowStatusBar(bool isShow);
 	[DllImport("__Internal")]
 	static extern void _SetStatusBarStyle (int style);
+	[DllImport("__Internal")]
+	static extern void _SetStatusBarAnimation (int anim);
 	#endif
 
 	public static void Show(bool isShow)
@@ -28,6 +30,18 @@ public static class StatusBarManager {
 	{
 		#if UNITY_IPHONE && !UNITY_EDITOR
 		_SetStatusBarStyle(style);
+		#else
+		#endif
+	}
+
+	// anim:
+	// 1:UIStatusBarAnimationFade
+	// 2:UIStatusBarAnimationSlide
+	// else:UIStatusBarAnimationNone
+	public static void BarAnim(int anim)
+	{
+		#if UNITY_IPHONE && !UNITY_EDITOR
+		_SetStatusBarAnimation(anim);
 		#else
 		#endif
 	}

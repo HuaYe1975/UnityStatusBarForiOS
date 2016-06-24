@@ -9,7 +9,6 @@
 #error This file must be compiled with ARC. Either turn on ARC for the project or use -fobjc-arc flag
 #endif
 
-#define HIDE_BAR_TAG 999
 
 #include "UnityViewControllerBaseiOS.h"
 
@@ -72,6 +71,11 @@ static UIStatusBarAnimation _animation = UIStatusBarAnimationSlide;
 {
     return _style;
 }
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+{
+    return _animation;
+}
 @end
 
 @implementation UnityPortraitUpsideDownOnlyViewController(StatusBar)
@@ -85,6 +89,11 @@ static UIStatusBarAnimation _animation = UIStatusBarAnimationSlide;
 {
     return _style;
 }
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+{
+    return _animation;
+}
 @end
 @implementation UnityLandscapeLeftOnlyViewController(StatusBar)
 
@@ -96,6 +105,11 @@ static UIStatusBarAnimation _animation = UIStatusBarAnimationSlide;
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
     return _style;
+}
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+{
+    return _animation;
 }
 @end
 @implementation UnityLandscapeRightOnlyViewController(StatusBar)
@@ -109,6 +123,11 @@ static UIStatusBarAnimation _animation = UIStatusBarAnimationSlide;
 {
     return _style;
 }
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+{
+    return _animation;
+}
 @end
 
 @implementation UnityDefaultViewController(StatusBar)
@@ -121,6 +140,11 @@ static UIStatusBarAnimation _animation = UIStatusBarAnimationSlide;
 {
     return _style;
 }
+
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
+{
+    return _animation;
+}
 @end
 
 extern "C"
@@ -129,7 +153,11 @@ extern "C"
     {
         UIViewController* parent = UnityGetGLViewController();
         _show = isShow;
-        [parent setNeedsStatusBarAppearanceUpdate];
+        
+        [UIView animateWithDuration:UINavigationControllerHideShowBarDuration animations:^{
+            [parent setNeedsStatusBarAppearanceUpdate];
+        }];
+        //[parent setNeedsStatusBarAppearanceUpdate];
     }
     
     void _SetStatusBarStyle(int style)
@@ -147,6 +175,23 @@ extern "C"
                 break;
             default:
                 _style = UIStatusBarStyleDefault;
+                break;
+        }
+        [parent setNeedsStatusBarAppearanceUpdate];
+    }
+    
+    void _SetStatusBarAnimation(int anim)
+    {
+        UIViewController* parent = UnityGetGLViewController();
+        switch (anim) {
+            case 1:
+                _animation = UIStatusBarAnimationFade;
+                break;
+            case 2:
+                _animation = UIStatusBarAnimationSlide;
+                break;
+            default:
+                _animation = UIStatusBarAnimationNone;
                 break;
         }
         [parent setNeedsStatusBarAppearanceUpdate];

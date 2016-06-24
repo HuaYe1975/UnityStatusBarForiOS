@@ -5,6 +5,7 @@ public class SampleManager : MonoBehaviour {
 
 	private bool statusBarHide = true;
 	private int style = 0;
+	private int anim = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -20,6 +21,7 @@ public class SampleManager : MonoBehaviour {
 	{
 		statusBarHide = !statusBarHide;
 		StatusBarManager.Show (!statusBarHide);
+		Debug.Log ("Show/hide changed: " + statusBarHide);
 	}
 
 	public void OnClickStyle()
@@ -29,5 +31,16 @@ public class SampleManager : MonoBehaviour {
 			style = 0;
 		}
 		StatusBarManager.BarStyle (style);
+		Debug.Log ("Style changed: " + style);
+	}
+
+	public void OnClickAnim()
+	{
+		anim += 1;
+		if (anim > 2) {
+			anim = 0;
+		}
+		StatusBarManager.BarAnim (anim);
+		Debug.Log ("Animation changed: " + anim);
 	}
 }
