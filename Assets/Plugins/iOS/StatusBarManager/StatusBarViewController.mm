@@ -19,6 +19,11 @@
 @end
 
 @implementation StatusBarViewController
+
+static bool _show = false;
+static UIStatusBarStyle _style = UIStatusBarStyleDefault;
+static UIStatusBarAnimation _animation = UIStatusBarAnimationSlide;
+
 + (void) hideStatusBar: (BOOL)hide
 {
     [[UIApplication sharedApplication] setStatusBarHidden: hide
@@ -60,7 +65,12 @@
 
 - (BOOL)prefersStatusBarHidden
 {
-    return self.view.tag == HIDE_BAR_TAG ? NO:YES;
+    return (!_show);
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return _style;
 }
 @end
 
@@ -68,33 +78,49 @@
 
 - (BOOL)prefersStatusBarHidden
 {
-    return self.view.tag == HIDE_BAR_TAG ? NO:YES;
+    return (!_show);
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return _style;
+}
 @end
 @implementation UnityLandscapeLeftOnlyViewController(StatusBar)
 
 - (BOOL)prefersStatusBarHidden
 {
-    return self.view.tag == HIDE_BAR_TAG ? NO:YES;
+    return (!_show);
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return _style;
+}
 @end
 @implementation UnityLandscapeRightOnlyViewController(StatusBar)
 
 - (BOOL)prefersStatusBarHidden
 {
-    return self.view.tag == HIDE_BAR_TAG ? NO:YES;
+    return (!_show);
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return _style;
+}
 @end
 
 @implementation UnityDefaultViewController(StatusBar)
 - (BOOL)prefersStatusBarHidden
 {
-    return self.view.tag == HIDE_BAR_TAG ? NO:YES;
+    return (!_show);
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return _style;
+}
 @end
 
 extern "C"
@@ -102,7 +128,27 @@ extern "C"
     void _ShowStatusBar(bool isShow)
     {
         UIViewController* parent = UnityGetGLViewController();
-        parent.view.tag = isShow ? 0 : HIDE_BAR_TAG;
+        _show = isShow;
+        [parent setNeedsStatusBarAppearanceUpdate];
+    }
+    
+    void _SetStatusBarStyle(int style)
+    {
+        UIViewController* parent = UnityGetGLViewController();
+        switch (style) {
+            case 1:
+                _style = UIStatusBarStyleLightContent;
+                break;
+            case 2:
+                _style = UIStatusBarStyleBlackTranslucent;
+                break;
+            case 3:
+                _style = UIStatusBarStyleBlackOpaque;
+                break;
+            default:
+                _style = UIStatusBarStyleDefault;
+                break;
+        }
         [parent setNeedsStatusBarAppearanceUpdate];
     }
 }

@@ -7,6 +7,8 @@ public static class StatusBarManager {
 	#if UNITY_IPHONE
 	[DllImport("__Internal")]
 	static extern void _ShowStatusBar(bool isShow);
+	[DllImport("__Internal")]
+	static extern void _SetStatusBarStyle (int style);
 	#endif
 
 	public static void Show(bool isShow)
@@ -17,4 +19,16 @@ public static class StatusBarManager {
 		#endif
 	}
 
+	// style:
+	// 1:UIStatusBarStyleLightContent
+	// 2:UIStatusBarStyleBlackTranslucent
+	// 3:UIStatusBarStyleBlackOpaque
+	// else:UIStatusBarStyleDefault
+	public static void BarStyle(int style)
+	{
+		#if UNITY_IPHONE && !UNITY_EDITOR
+		_SetStatusBarStyle(style);
+		#else
+		#endif
+	}
 }
